@@ -16,6 +16,7 @@ module HarvestNotifier
 
       @emails_whitelist = ENV.fetch("EMAILS_WHITELIST", "").split(",").map(&:strip)
       @missing_hours_threshold = ENV.fetch("MISSING_HOURS_THRESHOLD", 1.0).to_f
+      @missing_hours_daily_threshold = ENV.fetch("MISSING_HOURS_DAILY_THRESHOLD", 1.0).to_f
     end
 
     def daily(date = Date.yesterday)
@@ -121,7 +122,7 @@ module HarvestNotifier
     end
 
     def missing_hours_daily_insignificant?(user)
-      user["missing_hours_daily"] <= missing_hours_threshold
+      user["missing_hours_daily"] <= missing_hours_daily_threshold
     end
 
     def missing_hours_insignificant?(user)
