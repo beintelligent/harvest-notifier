@@ -5,7 +5,7 @@ require "active_support/core_ext/hash/keys"
 
 module HarvestNotifier
   class Report
-    attr_reader :harvest, :slack, :harvest_users, :slack_users, :emails_whitelist, :missing_hours_threshold
+    attr_reader :harvest, :slack, :harvest_users, :slack_users, :emails_whitelist, :missing_hours_threshold, :missing_hours_daily_threshold
 
     def initialize(harvest, slack)
       @harvest = harvest
