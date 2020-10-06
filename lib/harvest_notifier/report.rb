@@ -23,7 +23,7 @@ module HarvestNotifier
       users = with_slack(with_reports(report))
 
       filter(users) do |user|
-        not_notifiable?(user) || full_time_reported?(user)
+        not_notifiable?(user) || full_time_daily_reported?(user)
       end
     end
 
@@ -57,6 +57,7 @@ module HarvestNotifier
           "full_name" => full_name,
           "weekly_capacity" => hours,
           "missing_hours" => hours,
+          "missing_hours_daily" => 8,
           "total_hours" => 0
         }
       )
@@ -74,6 +75,7 @@ module HarvestNotifier
 
         reported_hours = report["total_hours"].to_f
 
+        users[id]["missing_hours_daily"] -= reported_hours
         users[id]["missing_hours"] -= reported_hours
         users[id]["total_hours"] += reported_hours
       end
@@ -106,12 +108,20 @@ module HarvestNotifier
       user["total_hours"].positive?
     end
 
+    def full_time_daily_reported?(user)
+      time_reported?(user) && missing_hours_daily_insignificant?(user)
+    end
+
     def full_time_reported?(user)
       time_reported?(user) && missing_hours_insignificant?(user)
     end
 
     def without_weekly_capacity?(user)
       user["weekly_capacity"].zero?
+    end
+
+    def missing_hours_daily_insignificant?(user)
+      user["missing_hours_daily"] <= missing_hours_threshold
     end
 
     def missing_hours_insignificant?(user)
