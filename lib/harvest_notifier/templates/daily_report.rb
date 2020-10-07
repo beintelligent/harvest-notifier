@@ -30,8 +30,7 @@ module HarvestNotifier
               json.type "section"
               json.text do
                 json.type "mrkdwn"
-                json.text format(USERS_LIST_TEXT, current_date: formatted_date)
-                json.text format(USERS_LIST_TEXT, minimun_working_hours: get_minimun_working_hours)
+                json.text format(USERS_LIST_TEXT, current_date: formatted_date, minimun_working_hours: get_minimun_working_hours)
               end
             end
 
