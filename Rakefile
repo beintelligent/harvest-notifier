@@ -18,4 +18,10 @@ namespace :reports do
     HarvestNotifier.create_daily_report
     Snitcher.snitch(ENV["SNITCH_DAILY"]) if ENV["SNITCH_DAILY"]
   end
+
+  desc "This task send report for the past friday"
+  task :monday do
+    HarvestNotifier.create_monday_report
+    Snitcher.snitch(ENV["SNITCH_DAILY"]) if ENV["SNITCH_DAILY"]
+  end
 end
