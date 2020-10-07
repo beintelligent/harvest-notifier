@@ -6,11 +6,11 @@ module HarvestNotifier
   module Templates
     class DailyReport < Base
       REMINDER_TEXT = "*Guys, don't forget to report the working hours in Harvest every day.*"
-      USERS_LIST_TEXT = "Here is a list of people who didn't report the minimum working hours (7.5) for *%<current_date>s*:"
+      USERS_LIST_TEXT = "Here is a list of people who didn't report the minimum working hours (*%<minimun_working_hours>s*hrs) for *%<current_date>s*:"
       REPORT_NOTICE_TEXT = "_Please, report time and react with :heavy_check_mark: for this message._"
       SLACK_ID_ITEM = "• <@%<slack_id>s>"
       FULL_NAME_ITEM = "• %<full_name>s"
-      TOTAL_HOURS = "(%<total_hours>s)"
+      TOTAL_HOURS = " (*%<total_hours>s*hrs)"
 
       def generate # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
         Jbuilder.encode do |json| # rubocop:disable Metrics/BlockLength
@@ -31,6 +31,7 @@ module HarvestNotifier
               json.text do
                 json.type "mrkdwn"
                 json.text format(USERS_LIST_TEXT, current_date: formatted_date)
+                json.text format(USERS_LIST_TEXT, minimun_working_hours: get_minimun_working_hours)
               end
             end
 
@@ -94,6 +95,10 @@ module HarvestNotifier
         assigns[:users]
           .map { |u| u[:slack_id].present? ? format(SLACK_ID_ITEM, u) + format(TOTAL_HOURS, u) : format(FULL_NAME_ITEM, u) + format(TOTAL_HOURS, u) }
           .join("\n")
+      end
+
+      def get_minimun_working_hours
+        8 - missing_hours_daily_threshold
       end
     end
   end

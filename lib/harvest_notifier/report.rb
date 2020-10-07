@@ -28,6 +28,15 @@ module HarvestNotifier
       end
     end
 
+    def monday(date = prior_friday(Date.today))
+      report = harvest.time_report_list(date)
+      users = with_slack(with_reports(report))
+
+      filter(users) do |user|
+        not_notifiable?(user) || full_time_daily_reported?(user)
+      end
+    end
+
     def weekly(from = Date.today.last_week, to = Date.today.last_week + 4)
       report = harvest.time_report_list(from, to)
       users = with_slack(with_reports(report))
@@ -135,6 +144,11 @@ module HarvestNotifier
 
     def inactive?(user)
       !user["is_active"]
+    end
+
+    def prior_friday(date)
+      days_before = (date.wday + 1) % 7 + 1
+      date.to_date - days_before
     end
   end
 end

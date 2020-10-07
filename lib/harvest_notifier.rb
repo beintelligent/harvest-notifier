@@ -16,6 +16,12 @@ module HarvestNotifier
     HarvestNotifier::Base.new.create_daily_report(Date.yesterday)
   end
 
+  def create_monday_report
+    return unless Date.today.monday?
+
+    HarvestNotifier::Base.new.create_monday_report()
+  end
+
   def create_weekly_report
     return unless Date.today.monday?
 

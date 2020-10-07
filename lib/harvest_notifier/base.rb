@@ -30,6 +30,16 @@ module HarvestNotifier
       end
     end
 
+    def create_monday_report()
+      users = report.monday()
+
+      if users.empty?
+        notification.deliver :congratulation, date: date
+      else
+        notification.deliver :daily_report, users: users, date: date
+      end
+    end
+
     def create_weekly_report(date_from, date_to)
       users = report.weekly(date_from, date_to)
 
