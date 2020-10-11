@@ -1,18 +1,20 @@
-# Slack Reminder
+# Slack Harvest Reminder
 
 [![Build Status](https://flatstack.semaphoreci.com/badges/harvest-notifier.svg)](https://flatstack.semaphoreci.com/projects/harvest-notifier)
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/beintelligent/harvest-notifier)
 
-Slack Reminder is an integration between Harvest and Slack which automatically reminds users who forget to mark their working hours in Harvest.
+Slack Harvest Reminder is an integration between Harvest and Slack which automatically reminds users who forget to mark their working hours in Harvest.
 
 This is a Ruby 2.6.5 library for installation on Daily Heroku Scheduler.
 Notification is determined from Harvest API V2.
 
 ## Features
 
-There are 2 types of reports: Daily and Weekly.
+There are 3 types of reports: Daily, Monday and Weekly.
 
-- Daily Report is generated on weekdays (except Monday) and shows those users who did not fill in their time for that day.
+- Daily Report is generated on weekdays (except Monday) and shows those users who did not fill the minimum quantity of hours in their timesheet for the previous day.
+
+- Monday Report is generated on Mondays and shows those users who did not fill the minimum quantity of hours in their timesheet for the previous Friday.
 
 - Weekly Report is generated every Monday and shows those users who still need to report the required working hours for last week.
 
@@ -22,8 +24,10 @@ This integration allows to:
 - quickly report the working hours from the link
 - set up custom report schedule
 - configure a whitelist which consists of users, who don't need to be notified in Slack
+- set up a threshold for daily hours and another for weekly hours
+- select the slack channel to use
 
-![Example](https://user-images.githubusercontent.com/49876756/86122099-e32be700-badf-11ea-8c0a-7cd86d047948.png)
+![Example](https://user-images.githubusercontent.com/30506741/95692380-ca57d380-0c81-11eb-9e77-d68b866b29c9.png)
 
 ## Quick Start
 
@@ -57,11 +61,14 @@ This integration allows to:
     heroku config:set MISSING_HOURS_DAILY_THRESHOLD=1.0
     # MISSING_HOURS_DAILY_THRESHOLD is a variable that indicates the daily minimum threshold of hours at which the employee will not be notified in Slack.
     # For example, 2.5 or 4. The default threshold is 1 hour. Leave empty if satisfied with the default value.
+    heroku config:set TZ=Pacific/Auckland
+    # TZ is the timezone to use for getting the hours and setting messages
     ```
 
 4. Add job in Heroku Scheduler
 
   * ```bin/rake reports:daily``` for daily report
+  * ```bin/rake reports:monday``` for monday report
   * ```bin/rake reports:weekly``` for weekly report
 
 
@@ -94,7 +101,8 @@ bin/build
 
 ## Credits
 
-It was written by [Flatstack](http://www.flatstack.com) with the help of our
-[contributors](http://github.com/fs/ruby-base/contributors).
+This repository is a FORK from [Harvest Notifier](https://github.com/fs/harvest-notifier).
 
-[<img src="http://www.flatstack.com/logo.svg" width="100"/>](http://www.flatstack.com)
+All the credits goes to that team.
+
+Our team, added a monday report and added small improvements (e.g. adding a daily threshold).
