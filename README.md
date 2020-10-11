@@ -85,7 +85,7 @@ This integration allows to:
 
 1. Сlone repo
 ```bash
-git clone git@github.com:fs/harvest-notifier.git
+git clone https://github.com/beintelligent/harvest-notifier.git
 cd harvest-notifier
 ```
 
