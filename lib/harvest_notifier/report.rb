@@ -46,6 +46,11 @@ module HarvestNotifier
       end
     end
 
+    def prior_friday(date)
+      days_before = (date.wday + 1) % 7 + 1
+      date.to_date - days_before
+    end
+
     private
 
     def not_notifiable?(user)
@@ -144,11 +149,6 @@ module HarvestNotifier
 
     def inactive?(user)
       !user["is_active"]
-    end
-
-    def prior_friday(date)
-      days_before = (date.wday + 1) % 7 + 1
-      date.to_date - days_before
     end
   end
 end
