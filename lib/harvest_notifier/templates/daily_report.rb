@@ -83,7 +83,7 @@ module HarvestNotifier
       private
 
       def formatted_date
-        assigns[:date].strftime("%B%eth")
+        assigns[:date].strftime("%B %eth")
       end
 
       def refresh_value
