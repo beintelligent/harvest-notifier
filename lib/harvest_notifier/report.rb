@@ -83,15 +83,7 @@ module HarvestNotifier
     def prepare_slack_users(users)
       users["members"]
         .group_by { |u| u["profile"]["email"] }
-        .transform_values { |u| slack_user(u.first) }
-    end
-
-    def slack_user(user)
-      email = user["profile"]["email"] ? user["profile"]["email"].downcase : ''
-      puts("EMAIL PAblo")
-      puts(email)
-      puts("EMAIL PAblo 2")
-      puts(user["profile"]["email"])
+        .transform_values(&:first)
     end
 
     def with_reports(reports)
