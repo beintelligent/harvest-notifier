@@ -80,7 +80,7 @@ module HarvestNotifier
 
     def prepare_slack_users(users)
       users["members"]
-        .group_by { |u| u["profile"]["email"] }
+        .group_by { |u| u["profile"]["email"].downcase }
         .transform_values(&:first)
     end
 
@@ -90,6 +90,7 @@ module HarvestNotifier
 
         reported_hours = report["total_hours"].to_f
 
+        users[id]["email"] = users[id]["email"].downcase
         users[id]["missing_hours_daily"] -= reported_hours
         users[id]["missing_hours"] -= reported_hours
         users[id]["total_hours"] += reported_hours
