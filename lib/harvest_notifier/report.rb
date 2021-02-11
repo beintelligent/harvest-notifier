@@ -68,9 +68,6 @@ module HarvestNotifier
       full_name = user.values_at("first_name", "last_name").join(" ")
       email = user["email"].downcase
 
-      puts("EMAIL PAblo")
-      puts(email)
-
       user.slice("is_contractor", "is_active").merge(
         {
           "email" => email,    
@@ -91,6 +88,10 @@ module HarvestNotifier
 
     def slack_user(user)
       email = user["profile"]["email"] ? user["profile"]["email"].downcase : ''
+      puts("EMAIL PAblo")
+      puts(email)
+      puts("EMAIL PAblo 2")
+      puts(user["profile"]["email"])
     end
 
     def with_reports(reports)
