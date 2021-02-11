@@ -66,9 +66,11 @@ module HarvestNotifier
     def harvest_user(user)
       hours = user["weekly_capacity"].to_f / 3600
       full_name = user.values_at("first_name", "last_name").join(" ")
+      email = user["email"].downcase
 
-      user.slice("email", "is_contractor", "is_active").merge(
+      user.slice("is_contractor", "is_active").merge(
         {
+          "email" => email,    
           "full_name" => full_name,
           "weekly_capacity" => hours,
           "missing_hours" => hours,
@@ -80,8 +82,12 @@ module HarvestNotifier
 
     def prepare_slack_users(users)
       users["members"]
-        .group_by { |u| u["profile"]["email"].downcase }
-        .transform_values(&:first)
+        .group_by { |u| u["profile"]["email"] }
+        .transform_values { |u| slack_user(u.first) }
+    end
+
+    def slack_user(user)
+      email = user["profile"]["email"].downcase
     end
 
     def with_reports(reports)
@@ -90,7 +96,6 @@ module HarvestNotifier
 
         reported_hours = report["total_hours"].to_f
 
-        users[id]["email"] = users[id]["email"].downcase
         users[id]["missing_hours_daily"] -= reported_hours
         users[id]["missing_hours"] -= reported_hours
         users[id]["total_hours"] += reported_hours
