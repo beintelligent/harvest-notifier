@@ -68,6 +68,9 @@ module HarvestNotifier
       full_name = user.values_at("first_name", "last_name").join(" ")
       email = user["email"].downcase
 
+      puts("EMAIL PAblo")
+      puts(email)
+
       user.slice("is_contractor", "is_active").merge(
         {
           "email" => email,    
