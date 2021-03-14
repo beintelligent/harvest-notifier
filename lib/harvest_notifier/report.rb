@@ -83,13 +83,7 @@ module HarvestNotifier
     def prepare_slack_users(users)
       users["members"]
         .group_by { |u| u["profile"]["email"] }
-        .transform_values { |u| slack_user(u.first) }
-    end
-
-    def slack_user(user)
-      return "" unless user["profile"]["email"].present?
-
-      user["profile"]["email"] = user["profile"]["email"].downcase
+        .transform_values(&:first)
     end
 
     def with_reports(reports)
@@ -113,7 +107,7 @@ module HarvestNotifier
     def slack_id(user)
       return "" unless slack_users.include?(user["email"])
 
-      slack_users[user["email"]]["id"]
+      slack_users[user["email"].downcase]["id"]
     end
 
     def filter(users)
