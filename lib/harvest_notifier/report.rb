@@ -87,8 +87,9 @@ module HarvestNotifier
     end
 
     def slack_user(user)
-      return "" unless slack_users.include?(user["email"])
-      
+      puts user
+      return "" unless user["profile"]["email"]
+
       user["profile"]["email"] = user["profile"]["email"].downcase
     end
 
