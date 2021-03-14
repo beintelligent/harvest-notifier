@@ -87,7 +87,7 @@ module HarvestNotifier
     end
 
     def slack_user(user)
-      user["email"] = user["email"].downcase
+      user["profile"]["email"] = user["profile"]["email"].downcase
     end
 
     def with_reports(reports)
